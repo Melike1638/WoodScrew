@@ -18,9 +18,9 @@ public static class PuzzleDifficultyProfile
         public int PhysicsSafeFirstScrewsMin;
         public int PhysicsSafeFirstScrewsMax;
 
-        // -1 = bu profil için çarpışan ilk vida hedefi kullanılmıyor.
-        public int BlockedFirstScrewsMin = -1;
-        public int BlockedFirstScrewsMax = -1;
+        // -1 / -1 = bu profil için çarpışan ilk vida hedefi kullanılmıyor.
+        public int BlockedFirstScrewsMin;
+        public int BlockedFirstScrewsMax;
 
         public float DecisionDensityMin;
         public float DecisionDensityMax;
@@ -38,10 +38,9 @@ public static class PuzzleDifficultyProfile
         {
             return new Profile
             {
-                // Generator'daki Bölüm 1 artık oyundaki Level 3'tür.
-                LevelNumber = 3,
+                LevelNumber = 1,
                 PlankCount = 3,
-                FreeHoleCount = 3,
+                FreeHoleCount = 2,
 
                 MinimumMovesMin = 6,
                 MinimumMovesMax = 7,
@@ -49,18 +48,18 @@ public static class PuzzleDifficultyProfile
                 InitialScrewChoicesMin = 4,
                 InitialScrewChoicesMax = 6,
 
-                PhysicsSafeFirstScrewsMin = 4,
-                PhysicsSafeFirstScrewsMax = 6,
+                PhysicsSafeFirstScrewsMin = 2,
+                PhysicsSafeFirstScrewsMax = 4,
 
-                BlockedFirstScrewsMin = 0,
-                BlockedFirstScrewsMax = 2,
+                BlockedFirstScrewsMin = -1,
+                BlockedFirstScrewsMax = -1,
 
-                DecisionDensityMin = 0.25f,
-                DecisionDensityMax = 0.40f,
+                DecisionDensityMin = 0.15f,
+                DecisionDensityMax = 0.30f,
 
                 DeadEndRateMax = 0.05f,
 
-                CandidateCount = 500,
+                CandidateCount = 18,
                 SolverStateLimit = 8000
             };
         }
@@ -82,6 +81,9 @@ public static class PuzzleDifficultyProfile
                 PhysicsSafeFirstScrewsMin = 2,
                 PhysicsSafeFirstScrewsMax = 4,
 
+                BlockedFirstScrewsMin = -1,
+                BlockedFirstScrewsMax = -1,
+
                 DecisionDensityMin = 0.18f,
                 DecisionDensityMax = 0.33f,
 
@@ -97,25 +99,38 @@ public static class PuzzleDifficultyProfile
             return new Profile
             {
                 LevelNumber = 3,
-                PlankCount = 3,
-                FreeHoleCount = 2,
 
-                MinimumMovesMin = 7,
-                MinimumMovesMax = 9,
+                // Yeni erken-oyun Level 3:
+                // 2 bağımsız tahta,
+                // shared screw yok,
+                // 2 vida / tahta,
+                // toplam 4 boş hedef deliği.
+                PlankCount = 2,
+                FreeHoleCount = 4,
 
-                InitialScrewChoicesMin = 3,
-                InitialScrewChoicesMax = 6,
+                // Her 4 gerçek vida en az bir kez taşınır.
+                MinimumMovesMin = 4,
+                MinimumMovesMax = 4,
 
-                PhysicsSafeFirstScrewsMin = 1,
-                PhysicsSafeFirstScrewsMax = 3,
+                InitialScrewChoicesMin = 4,
+                InitialScrewChoicesMax = 4,
 
-                DecisionDensityMin = 0.22f,
-                DecisionDensityMax = 0.38f,
+                PhysicsSafeFirstScrewsMin = 4,
+                PhysicsSafeFirstScrewsMax = 4,
 
-                DeadEndRateMax = 0.08f,
+                BlockedFirstScrewsMin = 0,
+                BlockedFirstScrewsMax = 0,
 
-                CandidateCount = 22,
-                SolverStateLimit = 10000
+                // Bu geometri özellikle basit tutuluyor.
+                // 4 boş hedef yüzünden karar yoğunluğu
+                // doğal olarak yüksek olabilir.
+                DecisionDensityMin = 0.50f,
+                DecisionDensityMax = 1.00f,
+
+                DeadEndRateMax = 0.05f,
+
+                CandidateCount = 12,
+                SolverStateLimit = 8000
             };
         }
 
@@ -158,6 +173,9 @@ public static class PuzzleDifficultyProfile
             PhysicsSafeFirstScrewsMin = 1,
             PhysicsSafeFirstScrewsMax =
                 3 + stage,
+
+            BlockedFirstScrewsMin = -1,
+            BlockedFirstScrewsMax = -1,
 
             DecisionDensityMin =
                 Mathf.Min(
@@ -221,16 +239,6 @@ public static class PuzzleDifficultyProfile
                 profile.PhysicsSafeFirstScrewsMin ||
             result.PhysicsSafeFirstScrewCount >
                 profile.PhysicsSafeFirstScrewsMax)
-        {
-            return false;
-        }
-
-        if (profile.BlockedFirstScrewsMin >= 0 &&
-            profile.BlockedFirstScrewsMax >= 0 &&
-            (result.BlockedFirstScrewCount <
-                 profile.BlockedFirstScrewsMin ||
-             result.BlockedFirstScrewCount >
-                 profile.BlockedFirstScrewsMax))
         {
             return false;
         }
@@ -300,53 +308,16 @@ public static class PuzzleDifficultyProfile
             ) *
             100f;
 
-        if (profile.BlockedFirstScrewsMin >= 0 &&
-            profile.BlockedFirstScrewsMax >= 0)
-        {
-            score +=
-                RangePenalty(
-                    result.BlockedFirstScrewCount,
-                    profile.BlockedFirstScrewsMin,
-                    profile.BlockedFirstScrewsMax
-                ) *
-                150f;
-        }
-
-        float decisionDensity =
-            GetDecisionDensity(result);
-
         score +=
             FloatRangePenalty(
-                decisionDensity,
+                GetDecisionDensity(result),
                 profile.DecisionDensityMin,
                 profile.DecisionDensityMax
             ) *
             1000f;
 
-        // Hedef aralığındaki birden fazla adayın hepsi
-        // eskiden 0 puan alabiliyordu. "En iyi aday" için
-        // aralığın merkezine yakın olanı çok küçük bir
-        // tie-break ile tercih ediyoruz.
-        float decisionMidpoint =
-            (profile.DecisionDensityMin +
-             profile.DecisionDensityMax) *
-            0.5f;
-
-        score +=
-            Mathf.Abs(
-                decisionDensity -
-                decisionMidpoint
-            ) *
-            10f;
-
         float deadEndRate =
             GetDeadEndRate(result);
-
-        // Maksimum sınırın altında da daha az çıkmaz
-        // küçük bir kalite avantajıdır.
-        score +=
-            deadEndRate *
-            10f;
 
         if (deadEndRate >
             profile.DeadEndRateMax)

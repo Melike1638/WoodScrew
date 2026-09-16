@@ -15,11 +15,21 @@ public static class PuzzleCandidateGenerator
         System.Random random =
             new System.Random(seed);
 
+        // Level 3 artık eski H geometrisini kullanmıyor.
+        // Erken oyun için sade ve okunabilir:
+        // 2 bağımsız tahta, 4 gerçek vida, 4 boş hedef deliği.
+        if (levelNumber == 3)
+        {
+            return GenerateSimpleLevel3Candidate(
+                levelNumber,
+                random
+            );
+        }
+
         if (profile.PlankCount <= 3)
         {
             return GenerateThreePlankCandidate(
                 levelNumber,
-                profile.FreeHoleCount,
                 random
             );
         }
@@ -33,9 +43,111 @@ public static class PuzzleCandidateGenerator
     }
 
     private static PuzzleDefinition
+        GenerateSimpleLevel3Candidate(
+            int levelNumber,
+            System.Random random)
+    {
+        PuzzleDefinition puzzle =
+            new PuzzleDefinition();
+
+        puzzle.LevelNumber =
+            levelNumber;
+
+        // 4 boş storage / hedef deliği.
+        // Tahtalardan tamamen bağımsız ve üst sırada.
+        float freeHoleY =
+            3.00f;
+
+        float freeHoleSpacing =
+            1.05f;
+
+        for (int i = 0;
+             i < 4;
+             i++)
+        {
+            float x =
+                (i - 1.5f) *
+                freeHoleSpacing;
+
+            AddHole(
+                puzzle,
+                puzzle.Holes.Count,
+                new Vector2(
+                    x,
+                    freeHoleY
+                ),
+                true
+            );
+        }
+
+        // İki tahta birbirine değmiyor.
+        // Shared screw yok.
+        // Her tahtada tam 2 vida var.
+        float topWidth =
+            Range(
+                random,
+                2.90f,
+                3.20f
+            );
+
+        float bottomWidth =
+            Range(
+                random,
+                2.75f,
+                3.05f
+            );
+
+        float topX =
+            Range(
+                random,
+                -0.12f,
+                0.12f
+            );
+
+        float bottomX =
+            Range(
+                random,
+                -0.12f,
+                0.12f
+            );
+
+        AddPlankWithSymmetricScrews(
+            puzzle,
+            0,
+            new Vector2(
+                topX,
+                0.85f
+            ),
+            new Vector2(
+                topWidth,
+                0.52f
+            ),
+            0f,
+            0.68f
+        );
+
+        AddPlankWithSymmetricScrews(
+            puzzle,
+            1,
+            new Vector2(
+                bottomX,
+                -0.85f
+            ),
+            new Vector2(
+                bottomWidth,
+                0.52f
+            ),
+            0f,
+            0.68f
+        );
+
+        return puzzle;
+    }
+
+
+    private static PuzzleDefinition
         GenerateThreePlankCandidate(
             int levelNumber,
-            int freeHoleCount,
             System.Random random)
     {
         PuzzleDefinition puzzle =
@@ -50,32 +162,25 @@ public static class PuzzleCandidateGenerator
         float freeHoleY =
             Range(random, 2.65f, 3.20f);
 
-        int actualFreeHoleCount =
-            Mathf.Max(
-                1,
-                freeHoleCount
-            );
+        AddHole(
+            puzzle,
+            0,
+            new Vector2(
+                -freeHoleSpacing,
+                freeHoleY
+            ),
+            true
+        );
 
-        float startX =
-            -freeHoleSpacing *
-            (actualFreeHoleCount - 1) *
-            0.5f;
-
-        for (int i = 0;
-             i < actualFreeHoleCount;
-             i++)
-        {
-            AddHole(
-                puzzle,
-                i,
-                new Vector2(
-                    startX +
-                    freeHoleSpacing * i,
-                    freeHoleY
-                ),
-                true
-            );
-        }
+        AddHole(
+            puzzle,
+            1,
+            new Vector2(
+                freeHoleSpacing,
+                freeHoleY
+            ),
+            true
+        );
 
         int template =
             random.Next(0, 5);
