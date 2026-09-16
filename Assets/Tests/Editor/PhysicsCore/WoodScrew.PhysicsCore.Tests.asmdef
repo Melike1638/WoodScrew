@@ -1,0 +1,21 @@
+{
+  "name": "WoodScrew.PhysicsCore.Tests",
+  "rootNamespace": "WoodScrew.Tests.PhysicsCore",
+  "references": [
+    "WoodScrew.PhysicsCore"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "noEngineReferences": false
+}

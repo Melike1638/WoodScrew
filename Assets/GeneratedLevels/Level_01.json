@@ -1,0 +1,162 @@
+{
+    "LevelNumber": 1,
+    "Planks": [
+        {
+            "Id": 0,
+            "Position": {
+                "x": -1.25,
+                "y": 0.0
+            },
+            "Size": {
+                "x": 0.5199999809265137,
+                "y": 3.1500000953674316
+            },
+            "Rotation": 0.0,
+            "ScrewAId": 0,
+            "ScrewBId": 1,
+            "ScrewCId": 2
+        },
+        {
+            "Id": 1,
+            "Position": {
+                "x": 1.25,
+                "y": 0.0
+            },
+            "Size": {
+                "x": 0.5199999809265137,
+                "y": 3.1500000953674316
+            },
+            "Rotation": 0.0,
+            "ScrewAId": 3,
+            "ScrewBId": 4,
+            "ScrewCId": 5
+        },
+        {
+            "Id": 2,
+            "Position": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "Size": {
+                "x": 2.5,
+                "y": 0.5199999809265137
+            },
+            "Rotation": 0.0,
+            "ScrewAId": 1,
+            "ScrewBId": 4,
+            "ScrewCId": -1
+        }
+    ],
+    "Holes": [
+        {
+            "Id": 0,
+            "Position": {
+                "x": -0.7234401106834412,
+                "y": 2.9625163078308105
+            },
+            "IsFreeStartHole": true
+        },
+        {
+            "Id": 1,
+            "Position": {
+                "x": 0.7234401106834412,
+                "y": 2.9625163078308105
+            },
+            "IsFreeStartHole": true
+        },
+        {
+            "Id": 2,
+            "Position": {
+                "x": 0.0,
+                "y": 2.9625163078308105
+            },
+            "IsFreeStartHole": true
+        },
+        {
+            "Id": 3,
+            "Position": {
+                "x": -1.25,
+                "y": 1.2999999523162842
+            },
+            "IsFreeStartHole": false
+        },
+        {
+            "Id": 4,
+            "Position": {
+                "x": -1.25,
+                "y": 0.0
+            },
+            "IsFreeStartHole": false
+        },
+        {
+            "Id": 5,
+            "Position": {
+                "x": -1.25,
+                "y": -1.2999999523162842
+            },
+            "IsFreeStartHole": false
+        },
+        {
+            "Id": 6,
+            "Position": {
+                "x": 1.25,
+                "y": 1.2999999523162842
+            },
+            "IsFreeStartHole": false
+        },
+        {
+            "Id": 7,
+            "Position": {
+                "x": 1.25,
+                "y": 0.0
+            },
+            "IsFreeStartHole": false
+        },
+        {
+            "Id": 8,
+            "Position": {
+                "x": 1.25,
+                "y": -1.2999999523162842
+            },
+            "IsFreeStartHole": false
+        }
+    ],
+    "Screws": [
+        {
+            "Id": 0,
+            "OwnerPlankId": 0,
+            "OriginalHoleId": 3,
+            "CurrentHoleId": 3
+        },
+        {
+            "Id": 1,
+            "OwnerPlankId": 0,
+            "OriginalHoleId": 4,
+            "CurrentHoleId": 4
+        },
+        {
+            "Id": 2,
+            "OwnerPlankId": 0,
+            "OriginalHoleId": 5,
+            "CurrentHoleId": 5
+        },
+        {
+            "Id": 3,
+            "OwnerPlankId": 1,
+            "OriginalHoleId": 6,
+            "CurrentHoleId": 6
+        },
+        {
+            "Id": 4,
+            "OwnerPlankId": 1,
+            "OriginalHoleId": 7,
+            "CurrentHoleId": 7
+        },
+        {
+            "Id": 5,
+            "OwnerPlankId": 1,
+            "OriginalHoleId": 8,
+            "CurrentHoleId": 8
+        }
+    ]
+}
